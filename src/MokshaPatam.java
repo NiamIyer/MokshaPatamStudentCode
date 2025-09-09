@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Moksha Patam
@@ -16,13 +18,33 @@ public class MokshaPatam {
      *  to reach the final square on a board with the given size, ladders, and snakes.
      */
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
-        if (!checkWin(boardsize, ladders, snakes)) {
+        if (!checkWin(ladders, snakes)) {
             return -1;
         }
-        bfs(boardsize,ladders,snakes,0);
+        // Creates a board which only contain the snakes and ladders
+        int[] board = new int[boardsize];
+        for (int i = 0; i < boardsize; i++) {
+            board[i] = -1;
+        }
+        for (int i = 0; i < ladders.length; i ++) {
+            board[ladders[i][0] - 1] = ladders[i][1];
+        }
+        for (int i = 0; i < snakes.length; i ++) {
+            board[snakes[i][0] - 1] = snakes[i][1];
+        }
+        // Creates a queue for the bfs
+        // Creates more variables to assist with bfs
+        Queue<Integer> queue = new LinkedList<Integer>();
+        queue.add(board[0]);
+        int counter = 0;
+        boolean[] visited = new boolean[boardsize];
+        for (int i = 0; i < boardsize; i++) {
+            visited[i] = false;
+        }
+        bfs(boardsize,ladders,snakes,0, queue);
         return 0;
     }
-    public static boolean checkWin(int boardsize, int[][] ladders, int[][] snakes) {
+    public static boolean checkWin(int[][] ladders, int[][] snakes) {
         if (snakesInRow(snakes) == -1) {
             return true;
         }
@@ -82,7 +104,8 @@ public class MokshaPatam {
         }
     }
 
-    public static int bfs(int boardsize, int[][] ladders, int[][] snakes, int counter) {
+    public static int bfs(int boardsize, int[][] ladders, int[][] snakes, int counter, Queue queue) {
+
         return counter;
     }
 }

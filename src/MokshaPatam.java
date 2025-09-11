@@ -22,26 +22,42 @@ public class MokshaPatam {
             return -1;
         }
         // Creates a board which only contain the snakes and ladders
-        int[] board = new int[boardsize];
-        for (int i = 0; i < boardsize; i++) {
-            board[i] = -1;
+        int[] board = new int[boardsize + 1];
+        for (int i = 0; i < boardsize + 1; i++) {
+            board[i] = i;
         }
         for (int i = 0; i < ladders.length; i ++) {
-            board[ladders[i][0] - 1] = ladders[i][1];
+            board[ladders[i][0]] = ladders[i][1];
         }
         for (int i = 0; i < snakes.length; i ++) {
-            board[snakes[i][0] - 1] = snakes[i][1];
+            board[snakes[i][0]] = snakes[i][1];
         }
         // Creates a queue for the bfs
         // Creates more variables to assist with bfs
         Queue<Integer> queue = new LinkedList<Integer>();
-        queue.add(board[0]);
+        queue.add(board[1]);
         int counter = 0;
-        boolean[] visited = new boolean[boardsize];
-        for (int i = 0; i < boardsize; i++) {
-            visited[i] = false;
+        boolean[] visited = new boolean[boardsize + 1];
+        visited[1] = true;
+        visited[board[1]] = true;
+        while (!queue.isEmpty()) {
+            int level = queue.size();
+            for (int i = 0; i < level; i++) {
+                int square = queue.poll();
+                for (int j = 1; j < 7; j++) {
+                    if (square + j <= boardsize) {
+                        if (board[square + j] == boardsize) {
+                            return counter + 1;
+                        }
+                        if (visited[board[square + j]] == false) {
+                            queue.add(board[square + j]);
+                            visited[square + j] = true;
+                        }
+                    }
+                }
+            }
+            counter ++;
         }
-        bfs(boardsize,ladders,snakes,0, queue);
         return 0;
     }
     public static boolean checkWin(int[][] ladders, int[][] snakes) {
@@ -52,7 +68,7 @@ public class MokshaPatam {
         int beginning = snakesInRow(snakes);
         for (int i = 0; i < ladders.length; i++) {
             if (ladders[i][0] < beginning) {
-                if (ladders[i][1] < beginning + 5) {
+                if (ladders[i][1] > beginning + 5) {
                     return true;
                 }
             }
@@ -69,7 +85,7 @@ public class MokshaPatam {
         // Checks if there are 6 snakes in a row
         int counter = 0;
         for (int i = 0; i < snakeList.length - 1; i++) {
-            if (snakeList[i] == snakeList[i+1] - 1) {
+            if (snakeList[i] + 1 == snakeList[i+1]) {
                 counter ++;
             }
         }
@@ -102,10 +118,5 @@ public class MokshaPatam {
                 break;
             }
         }
-    }
-
-    public static int bfs(int boardsize, int[][] ladders, int[][] snakes, int counter, Queue queue) {
-
-        return counter;
     }
 }

@@ -40,25 +40,34 @@ public class MokshaPatam {
         boolean[] visited = new boolean[boardsize + 1];
         visited[1] = true;
         visited[board[1]] = true;
+        // For each level
         while (!queue.isEmpty()) {
             int level = queue.size();
+            // For each element in each level
             for (int i = 0; i < level; i++) {
+                // Saves the top of the queue
                 int square = queue.poll();
+                // For every possible dice roll
                 for (int j = 1; j < 7; j++) {
+                    // If the roll is in bounds
                     if (square + j <= boardsize) {
+                        // Return if it is exact
                         if (board[square + j] == boardsize) {
                             return counter + 1;
                         }
+                        // If the tile isn't visited
                         if (visited[board[square + j]] == false) {
+                            // Add the tile to the queue and count it as visited
                             queue.add(board[square + j]);
                             visited[square + j] = true;
                         }
                     }
                 }
             }
+            // Increment the counter (goes to next level)
             counter ++;
         }
-        return 0;
+        return -1;
     }
     public static boolean checkWin(int[][] ladders, int[][] snakes) {
         if (snakesInRow(snakes) == -1) {
